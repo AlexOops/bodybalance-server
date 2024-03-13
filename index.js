@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from "mongoose";
 import {avatarUpload, serviceImageUpload, trainingImageUpload} from './config/multerConfig.js';
+import env from 'dotenv';
 
 import {
     registerValidation,
@@ -32,11 +33,10 @@ import {
     PatientCardController,
 } from './controllers/index.js';
 
-mongoose
+env.config();
 
-    // .connect('mongodb+srv://bodybalance:wwwwww@cluster0.st63z74.mongodb.net/blog?retryWrites=true&w=majority')
-    // .connect('mongodb://127.0.0.1:27017/bodybalance')//local
-    .connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/bodybalance')//environment variables
+mongoose
+    .connect(process.env.MONGODB_URI)
     .then(() => console.log('DB ok'))
     .catch((err) => console.log('DB error', err));
 
@@ -140,7 +140,8 @@ app.get('/appointments/employer/:id', AppointmentController.getByEmployer);
 
 
 //Сервер
-app.listen(process.env.PORT || 4444, (err) => { //запустить сервер
+app.listen(process.env.PORT, (err) => {
+
     if (err) {
         return console.log(err);
     }
